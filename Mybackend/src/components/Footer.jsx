@@ -1,9 +1,9 @@
-function Footer() {
+export default function Footer() {
   return (
-    <footer className="footer mt-auto">
-      <img src="/images/footer.jpg" alt="Footer" className="img-fluid w-100" />
+    <footer>
+      <div className="text-center">
+        <p className="mb-0">© 2025 Chavito. Todos los derechos reservados.</p>
+      </div>
     </footer>
   );
 }
-
-export default Footer;

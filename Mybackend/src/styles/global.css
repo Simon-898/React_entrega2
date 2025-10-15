@@ -1,133 +1,133 @@
 
-body {                       /* Fondo claro + texto negro */
-  background-color: #ffffff;
-  color: #000000;
-  margin: 0;
+
+.navbar{
+  background:#000 !important;
+  border-radius:0;
+  box-shadow:none;
+  margin:0;
+  width:100%;
+  padding-inline:16px;
+}
+.navbar .nav-link{ color:#fff; opacity:.9; }
+.navbar .nav-link:hover{ opacity:1; }
+
+
+.navbar .nav-link.nav-underline{ position:relative; }
+.navbar .nav-link.nav-underline.active{ font-weight:700; }
+.navbar .nav-link.nav-underline.active::after{
+  content:"";
+  position:absolute;
+  left:0;                     /* subrayado alineado al texto */
+  bottom:-8px;
+  width:48px;                 /* largo del subrayado */
+  height:3px;
+  background:#fff;
+  border-radius:2px;
 }
 
 
-header {                     /* Header negro fijo con sombra */
-  background: #000;
-  display: flex;
-  justify-content: center;
-  box-shadow: 1px 1px 5px black;
-  position: fixed; top: 0; width: 100%;
-  z-index: 100;
+
+
+.btn-pill{
+  border-color:#fff !important;
+  color:#fff !important;
+  border-width:1px;
+  padding:6px 14px;
+  border-radius:10px;
+  background:transparent;
+}
+.btn-pill:hover{ background:rgba(255,255,255,.08); }
+
+/* Compensa navbar fixed-top */
+.container-xxl{ margin-top:84px; }
+@media (max-width:576px){ .container-xxl{ margin-top:72px; } }
+
+/* --- CARRUSEL  --- */
+.hero-carousel .carousel-inner{
+  border-radius:0 !important;
+  box-shadow:none !important;
+  background:transparent;
+}
+.hero-carousel .carousel-control-prev-icon,
+.hero-carousel .carousel-control-next-icon{
+  filter: invert(1) drop-shadow(0 0 4px rgba(0,0,0,.6));
+}
+.hero-slide{
+  height: clamp(260px, 40vw, 520px);
+  object-fit: contain;      /* no recorta la imagen */
+  background:#fff;          /* mismo color de página */
 }
 
-/* Navbar  */
-.navbar { background: #000; }
-.navbar .nav-link { color: #fff; }
-.navbar .nav-link.active {     /* Subrayado del ítem activo */
-  font-weight: bold;
-  border-bottom: 2px solid #fff;
+/* --- HERO logo --- */
+.hero-logo{
+  display:block;
+  margin:24px auto 10px;
+  max-width: clamp(320px, 48vw, 900px);
+  height:auto;
 }
 
-
-.container {                   /* Compensa header fijo */
-  margin-top: 130px;
-  width: 90%;
-}
-.desplegable { display: flex; justify-content: space-between; }
-.dropdown { margin-left: 200px; }
-
-/*  Marcas (LOGOS) */
-.marcas {                      /* Grilla de 4 logos */
-  display: grid;
+/* --- MARCAS  --- */
+.brands-grid{
+  display:grid;
   grid-template-columns: repeat(4, 1fr);
   gap: clamp(16px, 3vw, 36px);
-  justify-items: center;
-  align-items: end;
+  align-items:end;
+  margin: clamp(8px, 2.5vw, 24px) 0 40px;
+}
+.brand{
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-end;
+  background:transparent; border:0; box-shadow:none;
+}
+.brand-img{
+  width:100%;
+  height: clamp(140px, 18vw, 360px);
+  object-fit:contain;
+  display:block;
+  background:transparent !important;
+  filter: grayscale(100%) brightness(0) contrast(120%); /* negro nítido */
+}
+.brand-label{
+  margin-top:10px; width:100%;
+  background:#000; color:#fff; text-align:center;
+  font-weight:800; letter-spacing:.08em; line-height:1;
+  padding: clamp(8px, 1.2vw, 12px) 6px;
+  font-size: clamp(14px, 1.6vw, 28px);
+  border-radius:4px;
 }
 
-.card-marcas {                 /* Contenedor sin fondo */
-  background: transparent;
-  border: 0;
-  text-align: center;
-  margin: 20px;
-  max-width: 340px;
+/* --- BLOG  --- */
+.page-blog .blog-img{
+  height:600px;
+  object-fit:cover;
+  background:#fff;
+  border-bottom:1px solid #000;
 }
+.page-blog .card{ border:1px solid #000; }
 
-.card-marcas img {             /* Logo negro puro sobre blanco */
-  width: 100%;
-  height: clamp(140px, 18vw, 320px);
-  object-fit: contain;
-  display: block;
-  background: #fff;            /* elimina “gris” detrás de PNG */
-  filter: brightness(0) saturate(100%); /* fuerza negro */
-}
-
-.card-marcas h1 {              /* Barra negra con nombre */
-  background: #000; color: #fff;
-  margin: 10px 0 0;
-  padding: 10px 8px;
-  font-size: clamp(14px, 1.6vw, 22px);
-  letter-spacing: .08em;
-  font-weight: 800;
-  border-radius: 4px;
-}
-
-/*  Botones  */
-.btn-outline-success { color:#000; border-color:#000; }
-.btn-outline-success:hover { background:#000; color:#fff; }
-
-/* Cards genéricas */
-.card {
-  border: none;
-  box-shadow: 1px 1px 10px rgba(0,0,0,.15);
-  transition: transform .5s ease;
-}
-.card:hover { transform: scale(1.1); }
-.card-title { color: #f7f5f5; }
-.card-text  { color: #333; }
-
-/*  Carrusel  */
-.carousel-item img {           /* Mantiene logos completos */
-  max-height: 480px;
-  object-fit: contain;
-  background: #fff;            /* fondo blanco consistente */
-}
-
-/*  Footer  */
-footer {                        /* Imagen + velo oscuro */
+/* --- FOOTER -- */
+footer{
   background-image:
     linear-gradient(0deg, rgba(0,0,0,.35), rgba(0,0,0,.35)),
     url(/images/footer.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  color: #fff;
-  display: flex; flex-direction: column; align-items: center;
-  margin-top: 50px;
-  padding: clamp(60px, 10vw, 120px) 16px;
-  width: 100%;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center;
+  color:#fff;
+  display:flex; flex-direction:column; align-items:center;
+  padding: clamp(28px, 6vw, 64px) 16px !important;
+  min-height:180px;
+  margin-top:36px;
 }
-footer a { color:#fff; text-decoration:none; }
-footer a:hover { text-decoration:underline; }
+footer a{ color:#fff; text-decoration:none; }
+footer a:hover{ text-decoration:underline; }
 
-/* Productos */
-.card-img-top {
-  height: 320px; width: 100%;
-  object-fit: cover;
-  background: #f6f6f6;
-}
-
-/*  Responsive  */
+/* --- Responsive marcas --- */
 @media (max-width: 992px){
-  .dropdown { margin-left: 80px; }  /* acorta separación */
-  .marcas { grid-template-columns: repeat(2, 1fr); }
+  .brands-grid{ grid-template-columns: repeat(2, 1fr); }
+  .container-xxl{ margin-top:76px; }
 }
-
 @media (max-width: 576px){
-  .carousel-item img { max-height: 240px; }
-  .card-img-top { height: 180px; }
-
-  /* Mantengo contraste en móvil */
-  header, .navbar { background:#000; }
-  .navbar .nav-link { color:#fff; }
-
-  .desplegable { margin: 20px 0 10px; }
-  .dropdown { margin-left: 50px; }
-
-  .marcas { grid-template-columns: 1fr; } /* 1 por fila */
+  .brands-grid{ grid-template-columns:1fr; }
+  .container-xxl{ margin-top:72px; }
 }
