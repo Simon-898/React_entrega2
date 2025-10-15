@@ -1,90 +1,133 @@
-/* Reset básico y tipografía */
-:root { --maxw: 1200px; }
-html, body { height: 100%; }
-body {
+
+body {                       /* Fondo claro + texto negro */
+  background-color: #ffffff;
+  color: #000000;
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: #fdfcfc;
-  color: #f4f4f4;
 }
 
-/* Contenedor principal */
-.container { max-width: var(--maxw); }
 
-/* Navbar */
-.navbar {
-  background: linear-gradient(180deg, #111 0%, #0d0d0d 100%);
-  border-radius: 14px;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 8px 30px rgba(0,0,0,.35);
-}
-.navbar .nav-link {
-  color: #e7e7e7 !important;
-  opacity: .9;
-}
-.navbar .nav-link.active,
-.navbar .nav-link:hover { color: #fff !important; opacity: 1; }
-
-/* Botones outline claros sobre fondo oscuro */
-.btn-outline-light {
-  --bs-btn-color: #f9f9f9;
-  --bs-btn-border-color: rgba(255,255,255,.35);
-  --bs-btn-hover-bg: #f9f9f9;
-  --bs-btn-hover-color: #111;
+header {                     /* Header negro fijo con sombra */
+  background: #000;
+  display: flex;
+  justify-content: center;
+  box-shadow: 1px 1px 5px black;
+  position: fixed; top: 0; width: 100%;
+  z-index: 100;
 }
 
-/* Carrusel */
-.carousel { border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(66, 37, 37, 0.4); }
-.carousel img { object-fit: cover; max-height: 460px; }
-.carousel-indicators [data-bs-target] {
-  width: 10px; height: 10px; border-radius: 50%;
+/* Navbar  */
+.navbar { background: #000; }
+.navbar .nav-link { color: #fff; }
+.navbar .nav-link.active {     /* Subrayado del ítem activo */
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
 }
 
-/* Grid marcas */
-.marcas {
+
+.container {                   /* Compensa header fijo */
+  margin-top: 130px;
+  width: 90%;
+}
+.desplegable { display: flex; justify-content: space-between; }
+.dropdown { margin-left: 200px; }
+
+/*  Marcas (LOGOS) */
+.marcas {                      /* Grilla de 4 logos */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  padding: 28px 0 40px;
+  gap: clamp(16px, 3vw, 36px);
+  justify-items: center;
+  align-items: end;
 }
-@media (max-width: 992px) { .marcas { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 576px){ .marcas { grid-template-columns: 1fr; } }
 
-.card-marcas {
-  background: #121212;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 16px;
-  padding: 18px;
+.card-marcas {                 /* Contenedor sin fondo */
+  background: transparent;
+  border: 0;
   text-align: center;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  margin: 20px;
+  max-width: 340px;
 }
-.card-marcas:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(0,0,0,.45);
-  border-color: rgba(255,255,255,.18);
-}
-.card-marcas img {
+
+.card-marcas img {             /* Logo negro puro sobre blanco */
   width: 100%;
-  height: 220px;
-  object-fit: contain; /* que los logos no se deformen */
-  filter: drop-shadow(0 6px 20px rgba(0,0,0,.35));
-}
-.card-marcas h1 {
-  font-size: 1.25rem;
-  letter-spacing: .12em;
-  margin: 14px 0 6px;
-  color: #ffffff;
+  height: clamp(140px, 18vw, 320px);
+  object-fit: contain;
+  display: block;
+  background: #fff;            /* elimina “gris” detrás de PNG */
+  filter: brightness(0) saturate(100%); /* fuerza negro */
 }
 
-/* Footer placeholder */
-footer { height: 40px; }
+.card-marcas h1 {              /* Barra negra con nombre */
+  background: #000; color: #fff;
+  margin: 10px 0 0;
+  padding: 10px 8px;
+  font-size: clamp(14px, 1.6vw, 22px);
+  letter-spacing: .08em;
+  font-weight: 800;
+  border-radius: 4px;
+}
 
-/* Utilidades */
-.desplegable { display: flex; align-items: center; gap: .75rem; }
+/*  Botones  */
+.btn-outline-success { color:#000; border-color:#000; }
+.btn-outline-success:hover { background:#000; color:#fff; }
 
-.carousel-item img {
-  height: 400px;     /* o lo que necesites */
+/* Cards genéricas */
+.card {
+  border: none;
+  box-shadow: 1px 1px 10px rgba(0,0,0,.15);
+  transition: transform .5s ease;
+}
+.card:hover { transform: scale(1.1); }
+.card-title { color: #f7f5f5; }
+.card-text  { color: #333; }
+
+/*  Carrusel  */
+.carousel-item img {           /* Mantiene logos completos */
+  max-height: 480px;
+  object-fit: contain;
+  background: #fff;            /* fondo blanco consistente */
+}
+
+/*  Footer  */
+footer {                        /* Imagen + velo oscuro */
+  background-image:
+    linear-gradient(0deg, rgba(0,0,0,.35), rgba(0,0,0,.35)),
+    url(/images/footer.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  display: flex; flex-direction: column; align-items: center;
+  margin-top: 50px;
+  padding: clamp(60px, 10vw, 120px) 16px;
+  width: 100%;
+}
+footer a { color:#fff; text-decoration:none; }
+footer a:hover { text-decoration:underline; }
+
+/* Productos */
+.card-img-top {
+  height: 320px; width: 100%;
   object-fit: cover;
+  background: #f6f6f6;
 }
 
+/*  Responsive  */
+@media (max-width: 992px){
+  .dropdown { margin-left: 80px; }  /* acorta separación */
+  .marcas { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 576px){
+  .carousel-item img { max-height: 240px; }
+  .card-img-top { height: 180px; }
+
+  /* Mantengo contraste en móvil */
+  header, .navbar { background:#000; }
+  .navbar .nav-link { color:#fff; }
+
+  .desplegable { margin: 20px 0 10px; }
+  .dropdown { margin-left: 50px; }
+
+  .marcas { grid-template-columns: 1fr; } /* 1 por fila */
+}
