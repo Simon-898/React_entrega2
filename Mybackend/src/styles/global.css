@@ -131,3 +131,13 @@ footer a:hover{ text-decoration:underline; }
   .brands-grid{ grid-template-columns:1fr; }
   .container-xxl{ margin-top:72px; }
 }
+/* === Página Blog (idéntica al HTML original) === */
+.page-blog .card{ border:1px solid #000; }
+
+/* Imágenes del blog con la MISMA altura y recorte elegante */
+.page-blog .blog-img{
+  height: 600px;        /* misma altura en ambas cards */
+  object-fit: cover;    /* recorta sin deformar */
+  background:#fff;
+  border-bottom:1px solid #000;
+}
