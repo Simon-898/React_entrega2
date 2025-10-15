@@ -1,0 +1,90 @@
+/* Reset básico y tipografía */
+:root { --maxw: 1200px; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #fdfcfc;
+  color: #f4f4f4;
+}
+
+/* Contenedor principal */
+.container { max-width: var(--maxw); }
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(180deg, #111 0%, #0d0d0d 100%);
+  border-radius: 14px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+}
+.navbar .nav-link {
+  color: #e7e7e7 !important;
+  opacity: .9;
+}
+.navbar .nav-link.active,
+.navbar .nav-link:hover { color: #fff !important; opacity: 1; }
+
+/* Botones outline claros sobre fondo oscuro */
+.btn-outline-light {
+  --bs-btn-color: #f9f9f9;
+  --bs-btn-border-color: rgba(255,255,255,.35);
+  --bs-btn-hover-bg: #f9f9f9;
+  --bs-btn-hover-color: #111;
+}
+
+/* Carrusel */
+.carousel { border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(66, 37, 37, 0.4); }
+.carousel img { object-fit: cover; max-height: 460px; }
+.carousel-indicators [data-bs-target] {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+/* Grid marcas */
+.marcas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  padding: 28px 0 40px;
+}
+@media (max-width: 992px) { .marcas { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 576px){ .marcas { grid-template-columns: 1fr; } }
+
+.card-marcas {
+  background: #121212;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 18px;
+  text-align: center;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card-marcas:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,.45);
+  border-color: rgba(255,255,255,.18);
+}
+.card-marcas img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain; /* que los logos no se deformen */
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,.35));
+}
+.card-marcas h1 {
+  font-size: 1.25rem;
+  letter-spacing: .12em;
+  margin: 14px 0 6px;
+  color: #ffffff;
+}
+
+/* Footer placeholder */
+footer { height: 40px; }
+
+/* Utilidades */
+.desplegable { display: flex; align-items: center; gap: .75rem; }
+
+.carousel-item img {
+  height: 400px;     /* o lo que necesites */
+  object-fit: cover;
+}
+
