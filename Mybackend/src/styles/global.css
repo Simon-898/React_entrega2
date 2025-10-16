@@ -39,7 +39,7 @@
 .btn-pill:hover{ background:rgba(255,255,255,.08); }
 
 /* Compensa navbar fixed-top */
-.container-xxl{ margin-top:34px; }
+.container-xxl{ margin-top:84px; }
 @media (max-width:576px){ .container-xxl{ margin-top:72px; } }
 
 /* --- CARRUSEL  --- */
