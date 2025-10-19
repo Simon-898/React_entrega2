@@ -1,8 +1,10 @@
+import Navbar from "../components/Navbar";
 export default function Home() {
   const slides = ['carrusel1.jpeg', 'carrusel2.jpg', 'carrusel3.jpg'];
 
   return (
     <>
+    <Navbar />
       {/* Carrusel */}
       <section className="hero-carousel my-4">
         <div id="heroCarousel" className="carousel slide" data-bs-ride="carousel">

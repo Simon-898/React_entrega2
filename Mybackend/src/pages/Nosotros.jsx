@@ -1,8 +1,11 @@
 
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function Nosotros() {
   return (
+    <>
+      <Navbar />
     <div className="container-xxl page-about">
      
       <section className="text-center my-4">
@@ -144,5 +147,6 @@ export default function Nosotros() {
         <Link to="/contacto" className="btn btn-outline-dark">Contáctanos</Link>
       </section>
     </div>
+    </>
   );
 }

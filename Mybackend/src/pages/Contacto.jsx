@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function Contacto() {
   const formRef = useRef(null);
@@ -21,6 +22,8 @@ export default function Contacto() {
   };
 
   return (
+    <>
+          <Navbar />
     <div className="container-xxl page-contact">
  
       <div className="row mt-4 mb-3">
@@ -122,5 +125,6 @@ export default function Contacto() {
         <Link to="/productos" className="btn btn-outline-dark">Volver a productos</Link>
       </div>
     </div>
+    </>
   );
 }

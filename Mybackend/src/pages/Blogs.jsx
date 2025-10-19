@@ -1,6 +1,10 @@
-export default function Blogs() {
+import Navbar from "../components/Navbar";
 
+export default function Blogs() {
   return (
+    <>
+      <Navbar />
+    
     <div className="container-xxl page-blog">
       {/* Encabezado */}
       <div className="row mt-4 mb-2">
@@ -59,5 +63,6 @@ export default function Blogs() {
         </div>
       </div>
     </div>
+    </>
   );
 }
