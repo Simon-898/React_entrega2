@@ -6,7 +6,7 @@ export default function Blogs() {
       <Navbar />
     
     <div className="container-xxl page-blog">
-      {/* Encabezado */}
+     
       <div className="row mt-4 mb-2">
         <div className="col">
           <h1 className="h4 m-0">Blog</h1>
@@ -14,7 +14,7 @@ export default function Blogs() {
         </div>
       </div>
 
-      {/* Cards */}
+   
       <div className="row g-4 mt-1">
      
         <div className="col-12 col-md-6">

@@ -19,8 +19,6 @@ export default function Login() {
       return setError("La contraseña debe tener al menos 6 caracteres.");
 
     console.log("Login OK:", { email });
-    // localStorage.setItem("user", JSON.stringify({ email, role: "admin" }));
-    // navigate("/"); // si usas useNavigate de react-router-dom
   };
 
   return (

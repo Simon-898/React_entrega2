@@ -1,8 +1,12 @@
-/* ====== LAYOUT GENERAL ====== */
+/* ====== LAYOUT GENERAL (grid: sidebar + main) ====== */
+:root { --sbw:240px; }
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
 .admin-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: var(--sbw) 1fr;
   background: #fff;
   color: #000;
 }
@@ -11,7 +15,7 @@
 .admin-sidebar {
   background: #000;
   color: #fff;
-  padding: 14px 14px 10px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -46,8 +50,14 @@
 .btn-link { background: none; border: none; cursor: pointer; font: inherit; text-align: left; }
 .btn-link.danger { color: #ffb3b3; }
 
-/* ====== CONTENIDO ====== */
-.admin-content { padding: 16px 20px; }
+/* ====== MAIN ====== */
+.admin-main {
+  padding: 16px 20px;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* encabezado de página */
 .content-head {
   display:flex; align-items:center; justify-content: space-between; gap: 10px;
   margin: 4px 0 12px;
@@ -56,7 +66,8 @@
 
 /* Botón "Nuevo" arriba a la derecha */
 .btn-new {
-  padding: 8px 12px; border: 1px solid #000; background:#111; color:#fff;
+  padding: 8px 12px;
+  border: 1px solid #000; background:#000; color:#fff;
   border-radius: 8px; cursor: pointer; font-weight: 600;
 }
 .btn-new:hover { background:#333; }
@@ -67,10 +78,14 @@
   box-shadow: 0 4px 10px rgba(0,0,0,.06);
 }
 .table-wrap { overflow-x: auto; }
-.tbl { width: 100%; border-collapse: collapse; }
+.tbl {
+  width: 100%;
+  min-width: 960px;             /* evita que la tabla se aplaste */
+  border-collapse: collapse;
+}
 .tbl thead th {
   text-align: left; font-weight: 700; padding: 12px; border-bottom: 1px solid #000;
-  background: #fff;
+  background: #fff; position: sticky; top: 0; z-index: 1;
 }
 .tbl tbody td { padding: 12px; border-bottom: 1px solid #e6e6e6; }
 .tbl tbody tr:last-child td { border-bottom: none; }
@@ -83,31 +98,47 @@
   background: #fff; color: #000; cursor: pointer;
 }
 .btn-sm:hover { background: #f3f3f3; }
-.btn-sm.danger {
-  border-color: #e06b6b; color: #b12d2d; background: #fff;
-}
+.btn-sm.danger { border-color: #e06b6b; color: #b12d2d; background: #fff; }
 .btn-sm.danger:hover { background: #ffeaea; }
+.btn-sm.warn   { border-color: #c9a600; color:#7a6000; }
+.btn-sm.warn:hover { background:#fff7d6; }
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 960px) {
-  .admin-shell { grid-template-columns: 200px 1fr; }
+  :root { --sbw: 200px; }
 }
 @media (max-width: 720px) {
   .admin-shell { grid-template-columns: 1fr; }
   .admin-sidebar { position: sticky; top: 0; z-index: 5; }
 }
-/* --- FIX ancho productos --- */
-.content-head{ display:flex; align-items:center; gap:.75rem; margin-bottom:.75rem; }
-.btn-new{
-  border:1px solid #000; background:#000; color:#fff;
-  border-radius:.5rem; padding:.25rem .6rem; font-size:.9rem;
+/* --- FIX: logo del sidebar --- */
+.admin-sidebar .brand img,
+.sb-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;         /* recorta sin deformar */
+  object-position: center;   /* centra el recorte */
+  border-radius: 50%;        /* avatar redondo */
+  border: 1px solid #fff;
+  background: #fff;          /* por si tiene transparencia */
+}
+/* --- Home admin: logo centrado --- */
+.admin-home-center{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  /* ocupa el alto visible restante bajo el pequeño card superior */
+  min-height: calc(100vh - 200px);
+}
+.admin-home-logo{
+  max-width: 760px;   /* tamaño máximo del logo */
+  width: 40vw;        /* escala en pantallas grandes */
+  height: auto;
+  opacity: .9;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,.12));
 }
 
-
-.admin-main .card,
-.admin-main .table-wrap,
-.admin-main .tbl{
-  width:100% !important;
-  max-width:none !important;
+/* responsive: cuando el sidebar pasa arriba, ajusta el alto restante */
+@media (max-width: 720px){
+  .admin-home-center{ min-height: calc(100vh - 240px); }
 }
-

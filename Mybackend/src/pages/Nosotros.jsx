@@ -141,7 +141,7 @@ export default function Nosotros() {
         </div>
       </section>
 
-      {/* CTA final */}
+      
       <section className="my-5 text-center">
         <Link to="/productos" className="btn btn-dark me-2">Ver productos</Link>
         <Link to="/contacto" className="btn btn-outline-dark">Contáctanos</Link>
