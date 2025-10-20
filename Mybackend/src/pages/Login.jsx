@@ -57,6 +57,7 @@ export default function Login() {
           <Link to="/Home" className="btn btn-outline-dark">Iniciar Sesion</Link>
         </form>
       </div>
+
     </section>
     </>
   );

@@ -10,7 +10,7 @@ export default function Nosotros() {
      
       <section className="text-center my-4">
         <img
-          src="/images/logochavito.jpeg"   // asegúrate que el archivo exista en /public/images/
+          src="/images/logochavito.jpeg"   
           alt="Logo de Chavito Store"
           className="about-hero-img img-fluid"
         />

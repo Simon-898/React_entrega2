@@ -1,5 +1,27 @@
+/* ====== BASE PARA LAYOUT PÚBLICO ====== */
+:root { --nav-h: 100px; } /* ajusta a la altura real del navbar */
 
+html, body, #root {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
 
+/* Usa esta clase en el <main> de páginas públicas */
+.public-main {
+  min-height: calc(100vh - 220px); /* deja aire antes del footer */
+  padding-top: var(--nav-h);        /* compensa navbar fixed-top */
+  padding-bottom: 48px;
+  background: #fff;
+}
+
+@media (max-width: 576px){
+  :root { --nav-h: 72px; } /* navbar más bajo en mobile */
+}
+
+/* ====== NAVBAR ====== */
 .navbar{
   background:#000 !important;
   border-radius:0;
@@ -11,23 +33,20 @@
 .navbar .nav-link{ color:#fff; opacity:.9; }
 .navbar .nav-link:hover{ opacity:1; }
 
-
 .navbar .nav-link.nav-underline{ position:relative; }
 .navbar .nav-link.nav-underline.active{ font-weight:700; }
 .navbar .nav-link.nav-underline.active::after{
   content:"";
   position:absolute;
-  left:0;                     /* subrayado alineado al texto */
+  left:0;
   bottom:-8px;
-  width:48px;                 /* largo del subrayado */
+  width:48px;
   height:3px;
   background:#fff;
   border-radius:2px;
 }
 
-
-
-
+/* Botones pill del navbar */
 .btn-pill{
   border-color:#fff !important;
   color:#fff !important;
@@ -38,9 +57,10 @@
 }
 .btn-pill:hover{ background:rgba(255,255,255,.08); }
 
-/* Compensa navbar fixed-top */
-.container-xxl{ margin-top:84px; }
-@media (max-width:576px){ .container-xxl{ margin-top:72px; } }
+/* ❌ Eliminado: NO usar márgenes en .container-xxl para compensar navbar
+   .container-xxl{ margin-top:84px; }
+   @media (max-width:576px){ .container-xxl{ margin-top:72px; } }
+*/
 
 /* --- CARRUSEL  --- */
 .hero-carousel .carousel-inner{
@@ -54,8 +74,8 @@
 }
 .hero-slide{
   height: clamp(260px, 40vw, 520px);
-  object-fit: contain;      /* no recorta la imagen */
-  background:#fff;          /* mismo color de página */
+  object-fit: contain;
+  background:#fff;
 }
 
 /* --- HERO logo --- */
@@ -85,7 +105,7 @@
   object-fit:contain;
   display:block;
   background:transparent !important;
-  filter: grayscale(100%) brightness(0) contrast(120%); /* negro nítido */
+  filter: grayscale(100%) brightness(0) contrast(120%);
 }
 .brand-label{
   margin-top:10px; width:100%;
@@ -125,36 +145,23 @@ footer a:hover{ text-decoration:underline; }
 /*  Responsive marcas */
 @media (max-width: 992px){
   .brands-grid{ grid-template-columns: repeat(2, 1fr); }
-  .container-xxl{ margin-top:76px; }
 }
 @media (max-width: 576px){
   .brands-grid{ grid-template-columns:1fr; }
-  .container-xxl{ margin-top:72px; }
 }
-/*  Blog  */
-.page-blog .card{ border:1px solid #000; }
 
-/* Imágenes del blog con la MISMA altura y recorte elegante */
-.page-blog .blog-img{
-  height: 600px;        /* misma altura en ambas cards */
-  object-fit: cover;    /* recorta sin deformar */
-  background:#fff;
-  border-bottom:1px solid #000;
-}
 /*  NOSOTROS */
 .page-about .btn-dark{ background:#000; border:none; }
 .page-about .btn-dark:hover{ background:#333; }
 .page-about .btn-outline-dark{ border-color:#000; color:#000; }
 .page-about .btn-outline-dark:hover{ background:#000; color:#fff; }
 
-/* Bloques con contorno sutil */
 .page-about .feature{
   border:1px solid #000;
   border-radius:8px;
   padding:1rem;
 }
 
-/* Imagen grande del logo (centrada) */
 .about-hero-img{
   max-height:260px;
   width: min(600px, 50%);
@@ -165,6 +172,7 @@ footer a:hover{ text-decoration:underline; }
 @media (max-width: 576px){
   .about-hero-img{ width: 100%; max-height:220px; }
 }
+
 /*  CONTACTO  */
 .page-contact .btn-dark{ background:#000; border:none; }
 .page-contact .btn-dark:hover{ background:#333; }
@@ -181,4 +189,3 @@ footer a:hover{ text-decoration:underline; }
 .page-contact .form-select{
   border-color:#000;
 }
-
