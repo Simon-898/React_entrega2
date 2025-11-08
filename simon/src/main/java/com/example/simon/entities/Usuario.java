@@ -60,7 +60,7 @@ public class Usuario {
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
-    // ---- Métodos explícitos por si Lombok no genera el setter/getter ----
+    
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }

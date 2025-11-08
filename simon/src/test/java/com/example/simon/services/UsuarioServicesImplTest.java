@@ -76,7 +76,7 @@ class UsuarioServicesImplTest {
         request.setPassword("123456");         // plano desde el front
         request.setRol(null);                  // lo fija el servicio (CLIENTE)
 
-        // Stubs
+       
         when(passwordEncoder.encode("123456")).thenReturn("ENC_123456");
         when(repository.save(any(Usuario.class))).thenAnswer(inv -> {
             Usuario u = inv.getArgument(0);

@@ -12,6 +12,9 @@ import Nosotros from "./pages/Nosotros.jsx";
 import Contacto from "./pages/Contacto.jsx";
 import Registro from "./pages/Registro.jsx";
 import Login from "./pages/Login.jsx";
+import ProductosPublic from "./pages/ProductosPublic.jsx";
+import Carrito from "./pages/carrito.jsx";
+
 
 // Admin
 import AdminLayout from "./components/admin/AdminLayout.jsx";
@@ -38,6 +41,9 @@ export default function App() {
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/productos" element={<ProductosPublic />} />
+          <Route path="/carrito" element={<Carrito />} />
+          
 
           {/* Admin */}
           <Route path="/admin" element={<AdminLayout />}>
