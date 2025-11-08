@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { useCart } from "../context/CartContext.jsx"; 
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { count } = useCart(); // 👈 cantidad total en carrito
 
   const close = () => setOpen(false);
 
@@ -51,14 +53,30 @@ export default function Navbar() {
           </ul>
 
           <div className="d-flex align-items-center gap-3">
-            <Link to="/carrito" className="btn btn-outline-light btn-pill position-relative" onClick={close}>
+            <Link
+              to="/carrito"
+              className="btn btn-outline-light btn-pill position-relative"
+              onClick={close}
+              aria-label={`Bolsa, ${count} artículo${count === 1 ? "" : "s"}`}
+            >
               <i className="bi bi-bag me-1" />
               Bolsa
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+              {count > 0 && (
+                <span
+                  className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style={{ fontSize: 12 }}
+                >
+                  {count}
+                </span>
+              )}
             </Link>
 
             <div className="dropdown">
-              <button className="btn btn-outline-light btn-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <button
+                className="btn btn-outline-light btn-pill dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+              >
                 <i className="bi bi-person-circle me-1" />
                 Cuenta
               </button>

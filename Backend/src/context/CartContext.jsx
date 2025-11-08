@@ -1,72 +1,101 @@
-
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-const CartCtx = createContext(null);
-export const useCart = () => useContext(CartCtx);
-
-const STORAGE_KEY = "cart_v2"; // clave en localStorage
+const CartContext = createContext();
+const STORAGE_KEY = "cart:v1";
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
   });
 
+  // se usa para forzar actualización en productos cuando se limpia el carrito
+  const [version, setVersion] = useState(0);
+
+  const total = useMemo(
+    () => items.reduce((acc, it) => acc + it.precio * it.qty, 0),
+    [items]
+  );
+
+  const count = useMemo(() => items.reduce((acc, it) => acc + it.qty, 0), [items]);
+
+  // guardar carrito en localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
-  // id compuesto por producto + talla 
-  const keyOf = (p, talla) => `${p.id}__${talla || ""}`;
+  function clear() {
+    setItems([]);
+    localStorage.removeItem(STORAGE_KEY);
+    setVersion(v => v + 1);
+  }
 
-  const addItem = (product, qty = 1, talla = "") => {
-    const key = keyOf(product, talla);
+  function removeItem(key) {
+    setItems(prev => prev.filter(it => it.key !== key));
+  }
+
+  function increase(key) {
+    setItems(prev =>
+      prev.map(it =>
+        it.key === key
+          ? {
+              ...it,
+              qty: Number.isFinite(it.stock)
+                ? Math.min(it.qty + 1, it.stock)
+                : it.qty + 1,
+            }
+          : it
+      )
+    );
+  }
+
+  function decrease(key) {
+    setItems(prev =>
+      prev
+        .map(it =>
+          it.key === key
+            ? { ...it, qty: Math.max(1, it.qty - 1) }
+            : it
+        )
+        .filter(Boolean)
+    );
+  }
+
+  function addItem(newItem) {
+    // si el producto ya está, suma cantidad
     setItems(prev => {
-      const i = prev.findIndex(x => x.key === key);
-      const max = Number.isFinite(product.stock) ? Math.max(0, product.stock) : Infinity;
-      if (i >= 0) {
-        const copy = [...prev];
-        const nextQty = Math.min(copy[i].qty + qty, max);
-        copy[i] = { ...copy[i], qty: nextQty };
-        return copy;
+      const ix = prev.findIndex(it => it.key === newItem.key);
+      if (ix >= 0) {
+        const curr = prev[ix];
+        const max = Number.isFinite(curr.stock) ? curr.stock : Infinity;
+        const merged = {
+          ...curr,
+          qty: Math.min(curr.qty + newItem.qty, max),
+        };
+        return [...prev.slice(0, ix), merged, ...prev.slice(ix + 1)];
       }
-      return [
-        ...prev,
-        {
-          key,
-          id: product.id,
-          nombre: product.nombre,
-          precio: Number(product.precio || 0),
-          imageUrl: product.imageUrl || "",
-          talla: talla || "", // variante
-          stock: product.stock ?? null,
-          qty: Math.min(qty, max),
-        }
-      ];
+      return [...prev, newItem];
     });
+  }
+
+  const value = {
+    items,
+    addItem,
+    removeItem,
+    increase,
+    decrease,
+    clear,
+    total,
+    count,
+    version,
   };
 
-  const removeItem = (key) => setItems(prev => prev.filter(x => x.key !== key));
-  const clear = () => setItems([]);
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+}
 
-  const increase = (key, step = 1) => setItems(prev => prev.map(x => {
-    if (x.key !== key) return x;
-    const max = Number.isFinite(x.stock) ? Math.max(0, x.stock) : Infinity;
-    return { ...x, qty: Math.min(x.qty + step, max) };
-  }));
-
-  const decrease = (key, step = 1) => setItems(prev => prev.map(x =>
-    x.key === key ? { ...x, qty: Math.max(1, x.qty - step) } : x
-  ));
-
-  const count = useMemo(() => items.reduce((a,b)=>a + b.qty, 0), [items]);
-  const total = useMemo(() => items.reduce((a,b)=>a + b.precio*b.qty, 0), [items]);
-
-  return (
-    <CartCtx.Provider value={{ items, addItem, removeItem, clear, increase, decrease, count, total }}>
-      {children}
-    </CartCtx.Provider>
-  );
+export function useCart() {
+  return useContext(CartContext);
 }

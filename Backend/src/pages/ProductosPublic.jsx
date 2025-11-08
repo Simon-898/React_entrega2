@@ -1,59 +1,83 @@
 // src/pages/ProductosPublic.jsx
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar.jsx";
+import { useEffect, useMemo, useState } from "react";
 import ProductModal from "../components/ProductModal.jsx";
 import { useCart } from "../context/CartContext.jsx";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:8082";
 
 export default function ProductosPublic() {
-  const { addItem } = useCart();
+  const { addItem, version } = useCart(); 
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("TODOS");
   const [sel, setSel] = useState(null); // producto seleccionado para el modal
 
+  const clp = useMemo(
+    () => new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }),
+    []
+  );
+
   useEffect(() => {
     const cargar = async () => {
       try {
         setError("");
         setCargando(true);
-        const res = await fetch(`${API}/api/productos`);
+        // cache buster para ver stock actualizado tras compras
+        const res = await fetch(`${API}/api/productos?ts=${Date.now()}`);
         if (!res.ok) throw new Error("Error al obtener los productos");
         const data = await res.json();
-        const activos = data.filter((p) => p.activo === true || p.activo === "true");
+        const activos = (Array.isArray(data) ? data : []).filter(
+          (p) => p.activo === true || p.activo === "true"
+        );
         setProductos(activos);
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "No se pudo cargar el catálogo");
       } finally {
         setCargando(false);
       }
     };
     cargar();
-  }, []);
+    // ⬇️ se vuelve a cargar cuando el carrito se limpia o se finaliza compra
+  }, [version]);
 
   // categorías disponibles
   const categorias = [
     "TODOS",
-    ...new Set(productos.map((p) => p.categoria?.nombre || "Sin categoría")),
+    ...new Set(productos.map((p) => p?.categoria?.nombre || "Sin categoría")),
   ];
 
   // productos filtrados
   const visibles =
     categoriaFiltro === "TODOS"
       ? productos
-      : productos.filter((p) => p.categoria?.nombre === categoriaFiltro);
+      : productos.filter((p) => p?.categoria?.nombre === categoriaFiltro);
 
-  const handleAdd = (product, qty, talla ) => {
-    addItem(product, qty, talla );
+  // Recibe (product, qty, talla) desde el modal, arma el objeto que espera el CartContext
+  const handleAdd = (product, qty, talla) => {
+    if (!product) return;
+
+    const id = product.id;
+    const key = `${id}:${talla || "-"}`; // clave única por producto+talla
+
+    const newItem = {
+      key,
+      id,
+      nombre: product.nombre,
+      precio: Number(product.precio) || 0,
+      imageUrl: product.imageUrl || "/images/placeholder.png",
+      talla: talla || null,
+      qty: Number(qty) || 1,
+      // si backend trae stock, úsalo para limitar + en carrito
+      stock: Number.isFinite(product.stock) ? Number(product.stock) : undefined,
+    };
+
+    addItem(newItem);
     setSel(null);
   };
 
   return (
     <>
-      <Navbar />
-
       <main style={{ minHeight: "calc(100vh - 180px)" }}>
         <section style={{ maxWidth: 1200, margin: "0 auto", padding: "24px 16px" }}>
           <h2 style={{ textAlign: "center", marginBottom: 20 }}>Nuestros Productos</h2>
@@ -126,7 +150,7 @@ export default function ProductosPublic() {
                     flexDirection: "column",
                     cursor: "pointer",
                   }}
-                  onClick={() => setSel(p)} // 👈 abre modal
+                  onClick={() => setSel(p)} // abre modal
                 >
                   <img
                     src={p.imageUrl || "/images/placeholder.png"}
@@ -159,10 +183,10 @@ export default function ProductosPublic() {
                         color: "#000",
                       }}
                     >
-                      ${new Intl.NumberFormat("es-CL").format(p.precio)}
+                      {clp.format(Number(p.precio) || 0)}
                     </p>
                     <small style={{ color: "#888" }}>
-                      {p.categoria?.nombre || "Sin categoría"}
+                      {p?.categoria?.nombre || "Sin categoría"}
                     </small>
                   </div>
                 </div>
@@ -172,7 +196,7 @@ export default function ProductosPublic() {
         </section>
       </main>
 
-      {/* 👇 Modal de producto (detalle + añadir al carrito) */}
+      {/* Modal de producto (detalle + añadir al carrito) */}
       <ProductModal
         open={!!sel}
         product={sel}

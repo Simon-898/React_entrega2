@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+
 public class Producto {
 
     @Id
@@ -36,3 +37,4 @@ public class Producto {
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion; 
 }
+ 
