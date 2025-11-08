@@ -1,4 +1,3 @@
-// src/pages/ProductosPublic.jsx
 import { useEffect, useMemo, useState } from "react";
 import ProductModal from "../components/ProductModal.jsx";
 import { useCart } from "../context/CartContext.jsx";
@@ -6,7 +5,7 @@ import { useCart } from "../context/CartContext.jsx";
 const API = import.meta.env.VITE_API_URL || "http://localhost:8082";
 
 export default function ProductosPublic() {
-  const { addItem, version } = useCart(); 
+  const { addItem, version } = useCart();
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -14,7 +13,12 @@ export default function ProductosPublic() {
   const [sel, setSel] = useState(null); // producto seleccionado para el modal
 
   const clp = useMemo(
-    () => new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }),
+    () =>
+      new Intl.NumberFormat("es-CL", {
+        style: "currency",
+        currency: "CLP",
+        maximumFractionDigits: 0,
+      }),
     []
   );
 
@@ -38,8 +42,7 @@ export default function ProductosPublic() {
       }
     };
     cargar();
-    // ⬇️ se vuelve a cargar cuando el carrito se limpia o se finaliza compra
-  }, [version]);
+  }, [version]); // refresca cuando se limpia carrito / compra
 
   // categorías disponibles
   const categorias = [
@@ -137,60 +140,97 @@ export default function ProductosPublic() {
                 gap: 24,
               }}
             >
-              {visibles.map((p) => (
-                <div
-                  key={p.id}
-                  style={{
-                    border: "1px solid #ddd",
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    background: "#fff",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
-                    display: "flex",
-                    flexDirection: "column",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setSel(p)} // abre modal
-                >
-                  <img
-                    src={p.imageUrl || "/images/placeholder.png"}
-                    alt={p.nombre}
-                    style={{
-                      width: "100%",
-                      height: 220,
-                      objectFit: "cover",
-                      background: "#fafafa",
-                    }}
-                    onError={(e) => (e.currentTarget.src = "/images/placeholder.png")}
-                  />
+              {visibles.map((p) => {
+                const stockNum = Number.isFinite(p?.stock) ? Number(p.stock) : undefined;
+                const critico = Number.isFinite(stockNum) && stockNum < 5;
+
+                return (
                   <div
+                    key={p.id}
                     style={{
-                      padding: 12,
-                      flex: 1,
+                      border: "1px solid #ddd",
+                      borderRadius: 8,
+                      overflow: "hidden",
+                      background: "#fff",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
                       display: "flex",
                       flexDirection: "column",
+                      cursor: "pointer",
                     }}
+                    onClick={() => setSel(p)} // abre modal
                   >
-                    <h3 style={{ fontSize: 18, marginBottom: 6 }}>{p.nombre}</h3>
-                    <p style={{ flex: 1, fontSize: 14, color: "#555" }}>
-                      {p.descripcion || "Sin descripción"}
-                    </p>
-                    <p
+                    {/* Contenedor de imagen con badge */}
+                    <div style={{ position: "relative" }}>
+                      <img
+                        src={p.imageUrl || "/images/placeholder.png"}
+                        alt={p.nombre}
+                        style={{
+                          width: "100%",
+                          height: 220,
+                          objectFit: "cover",
+                          background: "#fafafa",
+                        }}
+                        onError={(e) => (e.currentTarget.src = "/images/placeholder.png")}
+                      />
+
+                      {/* Badge de stock crítico */}
+                      {critico && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            background: "#b00020",
+                            color: "#fff",
+                            fontSize: 12,
+                            padding: "4px 8px",
+                            borderRadius: 12,
+                            boxShadow: "0 2px 6px rgba(0,0,0,.15)",
+                          }}
+                        >
+                          ⚠️ Stock crítico: {stockNum}
+                        </span>
+                      )}
+                    </div>
+
+                    <div
                       style={{
-                        marginTop: 8,
-                        fontWeight: "bold",
-                        fontSize: 16,
-                        color: "#000",
+                        padding: 12,
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                     >
-                      {clp.format(Number(p.precio) || 0)}
-                    </p>
-                    <small style={{ color: "#888" }}>
-                      {p?.categoria?.nombre || "Sin categoría"}
-                    </small>
+                      <h3 style={{ fontSize: 18, marginBottom: 6 }}>{p.nombre}</h3>
+                      <p style={{ flex: 1, fontSize: 14, color: "#555" }}>
+                        {p.descripcion || "Sin descripción"}
+                      </p>
+
+                      <p
+                        style={{
+                          marginTop: 8,
+                          fontWeight: "bold",
+                          fontSize: 16,
+                          color: "#000",
+                        }}
+                      >
+                        {clp.format(Number(p.precio) || 0)}
+                      </p>
+
+                      <small style={{ color: "#888" }}>
+                        {p?.categoria?.nombre || "Sin categoría"}
+                      </small>
+
+                      {/* Línea de aviso adicional bajo la categoría */}
+                      {critico && (
+                        <small style={{ color: "#b00020", fontWeight: 600, marginTop: 6 }}>
+                          ⚠️ Quedan {stockNum} unidades
+                        </small>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>
