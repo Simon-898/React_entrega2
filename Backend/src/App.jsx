@@ -1,5 +1,6 @@
-
-import { Routes, Route, useLocation } from "react-router-dom";
+// src/App.jsx
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext.jsx";
 
 // Navbar / Footer públicos
 import Navbar from "./components/Navbar.jsx";
@@ -15,7 +16,6 @@ import Login from "./pages/Login.jsx";
 import ProductosPublic from "./pages/ProductosPublic.jsx";
 import Carrito from "./pages/carrito.jsx";
 
-
 // Admin
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import AdminHome from "./pages/AdminHome.jsx";
@@ -23,6 +23,16 @@ import AdminProductos from "./pages/AdminProductos.jsx";
 import AdminProductoNuevo from "./pages/AdminProductoNuevo.jsx";
 import AdminProductoEditar from "./pages/AdminProductoEditar.jsx";
 import AdminUsuarios from "./pages/AdminUsuarios.jsx";
+
+// Ruta protegida: requiere sesión y rol SUPER_ADMIN
+function ProtectedAdminRoute({ children }) {
+  const { isAuthenticated, isAdmin } = useAuth();
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+
+  return children;
+}
 
 export default function App() {
   const { pathname } = useLocation();
@@ -43,16 +53,28 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/productos" element={<ProductosPublic />} />
           <Route path="/carrito" element={<Carrito />} />
-          
 
-          {/* Admin */}
-          <Route path="/admin" element={<AdminLayout />}>
+          {/* Admin (protegido) */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }
+          >
             <Route index element={<AdminHome />} />
             <Route path="productos" element={<AdminProductos />} />
             <Route path="productos/nuevo" element={<AdminProductoNuevo />} />
             <Route path="productos/:id/editar" element={<AdminProductoEditar />} />
             <Route path="usuarios" element={<AdminUsuarios />} />
+
+            {/* Cualquier ruta desconocida dentro de /admin → /admin */}
+            <Route path="*" element={<Navigate to="/admin" replace />} />
           </Route>
+
+          {/* Cualquier ruta desconocida pública → / */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
