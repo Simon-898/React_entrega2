@@ -7,17 +7,18 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null); // { email, rol }
+  const [user, setUser] = useState(null); // { id, email, rol }
   const [loading, setLoading] = useState(true);
 
   // Cargar sesión desde localStorage al arrancar
   useEffect(() => {
     const t = localStorage.getItem("auth.token");
+    const id = localStorage.getItem("auth.id");
     const email = localStorage.getItem("auth.email");
     const rol = localStorage.getItem("auth.rol");
-    if (t && email && rol) {
+    if (t && id && email && rol) {
       setToken(t);
-      setUser({ email, rol });
+      setUser({ id: parseInt(id, 10), email, rol });
     }
     setLoading(false);
   }, []);
@@ -39,24 +40,27 @@ export function AuthProvider({ children }) {
       throw new Error(msg);
     }
 
-    const data = await res.json(); // { token, rol, email }
+    const data = await res.json(); // { token, id, rol, email }
     const t = data.token;
+    const id = data.id;
     const rol = data.rol;
     const mail = data.email || email;
 
     // Persistir
     localStorage.setItem("auth.token", t);
+    localStorage.setItem("auth.id", id);
     localStorage.setItem("auth.email", mail);
     localStorage.setItem("auth.rol", rol);
 
     setToken(t);
-    setUser({ email: mail, rol });
+    setUser({ id, email: mail, rol });
 
     return { rol };
   }
 
   function logout() {
     localStorage.removeItem("auth.token");
+    localStorage.removeItem("auth.id");
     localStorage.removeItem("auth.email");
     localStorage.removeItem("auth.rol");
     setToken(null);

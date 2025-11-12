@@ -2,10 +2,13 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import { useCart } from "../context/CartContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import { enviarCheckout } from "../services/checkoutApi.js";
+import { createOrder } from "../services/orderApi.js";
 
 export default function Carrito() {
   const { items, increase, decrease, removeItem, clear, total } = useCart();
+  const { user } = useAuth();
   const nav = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -30,11 +33,16 @@ export default function Carrito() {
         talla: it.talla || null,
       }));
 
+      // Primero, crear la orden en el backend
+      const order = await createOrder(user.id, checkoutItems);
+
+      // Luego, hacer el checkout (decrementar stock en simon2)
       await enviarCheckout(checkoutItems);
 
       alert("✅ ¡Compra realizada con éxito!");
       clear();
-      nav("/productos", { replace: true }); // refresca la vista de productos
+      // Redirigir a la boleta creada
+      nav(`/invoices/${order.id}`, { replace: true });
     } catch (e) {
       alert(e.message || "❌ No se pudo finalizar la compra (verifica stock).");
     } finally {

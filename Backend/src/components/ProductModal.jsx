@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FALLBACK_TALLAS = ["XS","S","M","L","XL"];
 
-export default function ProductModal({ open, product, onClose, onAdd }) {
+export default function ProductModal({ open, product, onClose, onAdd, isAuthenticated = false }) {
+  const nav = useNavigate();
   const tallas = useMemo(() => {
     if (!product) return FALLBACK_TALLAS;
     // Si desde BD viene una sola talla en string (ej. "M"), la ponemos primero.
@@ -119,14 +121,27 @@ export default function ProductModal({ open, product, onClose, onAdd }) {
 
             <div style={{ marginTop:"auto", display:"flex", gap:8, justifyContent:"flex-end" }}>
               <button onClick={onClose} className="btn btn-light">Cerrar</button>
-              <button
-                onClick={add}
-                className="btn btn-dark"
-                disabled={tallas.length>0 && !talla} // fuerza elegir talla si hay opciones
-                title={!talla && tallas.length>0 ? "Selecciona una talla" : "Añadir al carrito"}
-              >
-                Añadir al carrito
-              </button>
+              {isAuthenticated ? (
+                <button
+                  onClick={add}
+                  className="btn btn-dark"
+                  disabled={tallas.length>0 && !talla} // fuerza elegir talla si hay opciones
+                  title={!talla && tallas.length>0 ? "Selecciona una talla" : "Añadir al carrito"}
+                >
+                  Añadir al carrito
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    onClose();
+                    nav("/login");
+                  }}
+                  className="btn btn-dark"
+                  title="Debes iniciar sesión para comprar"
+                >
+                  Inicia sesión para comprar
+                </button>
+              )}
             </div>
           </div>
         </div>

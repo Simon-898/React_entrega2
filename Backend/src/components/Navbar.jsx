@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { useCart } from "../context/CartContext.jsx"; 
+import { useCart } from "../context/CartContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { count } = useCart(); // 👈 cantidad total en carrito
+  const { isAuthenticated, logout } = useAuth();
 
   const close = () => setOpen(false);
 
@@ -50,6 +52,11 @@ export default function Navbar() {
             <li className="nav-item">
               <NavLink to="/contacto" className="nav-link nav-underline" onClick={close}>Contacto</NavLink>
             </li>
+            {isAuthenticated && (
+              <li className="nav-item">
+                <NavLink to="/invoices" className="nav-link nav-underline" onClick={close}>Boleta</NavLink>
+              </li>
+            )}
           </ul>
 
           <div className="d-flex align-items-center gap-3">
@@ -81,8 +88,18 @@ export default function Navbar() {
                 Cuenta
               </button>
               <ul className="dropdown-menu dropdown-menu-end">
-                <li><Link className="dropdown-item" to="/login" onClick={close}>Iniciar sesión</Link></li>
-                <li><Link className="dropdown-item" to="/registro" onClick={close}>Crear cuenta</Link></li>
+                {isAuthenticated ? (
+                  <>
+                    <li><Link className="dropdown-item" to="/invoices" onClick={close}>Mis Boletas</Link></li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li><button className="dropdown-item" onClick={() => { logout(); close(); }}>Cerrar sesión</button></li>
+                  </>
+                ) : (
+                  <>
+                    <li><Link className="dropdown-item" to="/login" onClick={close}>Iniciar sesión</Link></li>
+                    <li><Link className="dropdown-item" to="/registro" onClick={close}>Crear cuenta</Link></li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

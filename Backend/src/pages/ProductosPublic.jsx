@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import ProductModal from "../components/ProductModal.jsx";
 import { useCart } from "../context/CartContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:8082";
 
 export default function ProductosPublic() {
   const { addItem, version } = useCart();
+  const { isAuthenticated } = useAuth();
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -58,6 +60,11 @@ export default function ProductosPublic() {
 
   // Recibe (product, qty, talla) desde el modal, arma el objeto que espera el CartContext
   const handleAdd = (product, qty, talla) => {
+    if (!isAuthenticated) {
+      alert("Debes iniciar sesión para agregar productos al carrito");
+      return;
+    }
+    
     if (!product) return;
 
     const id = product.id;
@@ -242,6 +249,7 @@ export default function ProductosPublic() {
         product={sel}
         onClose={() => setSel(null)}
         onAdd={handleAdd}
+        isAuthenticated={isAuthenticated}
       />
     </>
   );

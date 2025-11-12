@@ -15,6 +15,8 @@ import Registro from "./pages/Registro.jsx";
 import Login from "./pages/Login.jsx";
 import ProductosPublic from "./pages/ProductosPublic.jsx";
 import Carrito from "./pages/carrito.jsx";
+import InvoicesList from "./pages/InvoicesList.jsx";
+import InvoiceDetail from "./pages/InvoiceDetail.jsx";
 
 // Admin
 import AdminLayout from "./components/admin/AdminLayout.jsx";
@@ -30,6 +32,15 @@ function ProtectedAdminRoute({ children }) {
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   if (!isAdmin) return <Navigate to="/" replace />;
+
+  return children;
+}
+
+// Ruta protegida: requiere sesión de usuario
+function ProtectedUserRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   return children;
 }
@@ -52,7 +63,30 @@ export default function App() {
           <Route path="/registro" element={<Registro />} />
           <Route path="/login" element={<Login />} />
           <Route path="/productos" element={<ProductosPublic />} />
-          <Route path="/carrito" element={<Carrito />} />
+          <Route
+            path="/carrito"
+            element={
+              <ProtectedUserRoute>
+                <Carrito />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/invoices"
+            element={
+              <ProtectedUserRoute>
+                <InvoicesList />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/invoices/:id"
+            element={
+              <ProtectedUserRoute>
+                <InvoiceDetail />
+              </ProtectedUserRoute>
+            }
+          />
 
           {/* Admin (protegido) */}
           <Route
